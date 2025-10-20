@@ -1,0 +1,121 @@
+# Metadata for this documentation project.
+# See https://quarto.orgcontent/reference/projects/websites.html
+project:
+  type: website
+  output-dir: _site
+
+# Extensions:
+# simple-vars: Lets us reference variables as `{name}`  instead of the wordier `{{< var name >}}`
+# admonitions: A simpler alternative to Quarto callout blocks.
+filters:
+  - simple-vars
+  - admonitions
+
+format:
+  html:
+    toc: true
+    toc-expand: true
+    code-copy: true
+    code-overflow: scroll
+    grid:
+      sidebar-width: 250px
+      body-width: 950px
+      margin-width: 200px
+      gutter-width: 1.5em
+    theme:
+      light:
+        - cosmo
+        - css/theme.scss
+        - css/extras.scss
+      dark:
+        - cosmo
+        - css/theme.scss
+        - css/dark.scss
+        - css/extras.scss
+
+website:
+  title: "Doxytest"
+  image: "images/logo.svg"
+  favicon: "images/logo.svg"
+  open-graph: true
+  site-url: "https://nessan.github.io/doxytest"
+  repo-url: "https://github.com/nessan/doxytest"
+  repo-subdir: docs
+  issue-url: "https://github.com/nessan/doxytest/issues/new/choose"
+  repo-actions: [edit, issue]
+  page-navigation: true
+  bread-crumbs: false
+  back-to-top-navigation: true
+  page-footer:
+    left: |
+      &#169; 2025 Nessan &#8729; Made with [Quarto](https://quarto.org)
+    center:
+      - icon: github
+        href: "https://github.com/nessan/doxytest"
+        aria-label: GitHub Repo
+      - icon: envelope
+        href: "mailto:nzznfitz+gh@icloud.com"
+        aria-label: EMail address
+    right: |
+      [MIT Licensed](https://opensource.org/license/mit)
+
+  navbar:
+    logo: "images/logo.svg"
+    logo-alt: "The Doxytest logo"
+    background: dark
+    search: true
+    pinned: true
+    collapse-below: lg
+    left:
+      - text: "Tool"
+        href: pages/script/index.qmd
+      - text: "CMake"
+        href: pages/cmake/index.qmd
+      - text: "More"
+        menu:
+          - text: "Project Repo"
+            icon: "github"
+            href: "https://github.com/nessan/doxytest"
+          - text: "Report a Bug"
+            icon: "bug"
+            href: "https://github.com/nessan/doxytest/issues"
+          - text: "Ask a Question"
+            icon: "chat-right-text"
+            href: "mailto:nzznfitz+gh@icloud.com"
+    tools:
+      - icon: github
+        href: "https://github.com/nessan/doxytest"
+        text: GitHub repo
+
+  sidebar:
+    style: floating
+    type: light
+    background: light
+    align: left
+    collapse-level: 2
+    contents:
+      - text: Doxytest
+        href: pages/index.qmd
+      - text: "---"
+      - section: "`doxytest.py`"
+        contents:
+          - text: "Introduction"
+            href: pages/script/index.qmd
+          - text: "Reference"
+            href: pages/script/reference.qmd
+          - text: "Assertions"
+            href: pages/script/assertions.qmd
+          - text: "Advanced Usage"
+            href: pages/script/advanced.qmd
+      - text: "---"
+      - section: "`doxytest.cmake`"
+        contents:
+          - text: "Introduction"
+            href: pages/cmake/index.qmd
+          - text: "Reference"
+            href: pages/cmake/index.qmd#reference
+          - text: "Example"
+            href: pages/cmake/index.qmd#example
+editor:
+  markdown:
+    canonical: true

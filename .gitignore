@@ -1,0 +1,50 @@
+# Set up the folders/files that should never go into the git repository.
+
+# The Mac Finder produces a metadata file in directories that is noise
+.DS_Store
+
+# My specific Visual Code setup is only useful to me
+.vscode/
+
+# Some local scratch files are kept in private directories that need not go into git
+# These include temporary files we use to capture program outputs.
+private/
+scratch*
+OUT.*
+ERR.*
+a.out
+
+# Exclusions for the MSVC build system
+out/
+.vs/
+
+# Sometimes we use Quarto for documentation and we don't need to version its cache or local build.
+.quarto/
+_site/
+.luarc.json
+
+# Exclusions for Python/Jupyter
+venv/
+.python-version
+__pycache__/
+.ipynb_checkpoints/
+.ruff_cache/
+
+# Exclusions for Node.js
+node_modules/
+
+# Exclusions for Lua/LuaRocks
+/luarocks
+/lua
+/lua_modules
+/.luarocks
+/.luarc.json
+*.rock
+
+# Exclusions for Rust/Cargo
+/target
+/Cargo.lock
+**/*.rs.bkp*
+
+# Any LLM prompts
+prompt.md

@@ -1,0 +1,199 @@
+---
+title: "Reference"
+---
+
+The `doxytest.py` script uses the following syntax:
+
+```txt
+doxytest.py [options] <path_to_directory_or_file> [<path_to_directory_or_file> ...]
+```
+
+You must specify at least one header file or directory.
+
+If a specified path is a directory, the script will scan for all header files in the directory and its subdirectories.
+The extensions `.h` and `.hpp` identify header files.
+
+## Options
+
+The following options are available:
+
+- `-h, --help`: Show help message and exit.
+- `-i, --include HEADER`: A header file to include in generated test files (you can specify this option multiple times).
+- `-d, --dir DIR`: Output directory for the generated `.cpp` files (default is the current directory).
+- `-p, --prefix PREFIX`: Prefix to use for the generated test filenames (default is `doxy_`).
+- `-f, --force`: Force regeneration of test files even if they exist and are newer than the header file.
+- `-a, --always`: Always generate a trivial test file even if the script finds no test code block in the header.
+- `-m, --max_fails COUNT`: Maximum number of allowed test failures before aborting (default: 10).
+- `-c, --combined [NAME]`: Generate only a combined test file containing all discovered test cases. If `NAME` is provided, it becomes the basename of the generated file. The default basename is `doxytests`.
+- `-s, --silent`: Suppress progress messages (error messages are always shown).
+
+### `--include`
+
+It is often necessary to include other header files in the generated `.cpp` files.
+
+You can do this with the `--include` option:
+
+```sh
+doxytest.py --include "<Bar/Bar.h>" --include "<iostream>" include/project/
+```
+
+With these options, we will include the `<Bar/Bar.h>` and `<iostream>` header files in all the generated test files from the headers in the `include/project/` directory.
+
+The generated test files always include several system headers:
+
+```cpp
+#include <cstdlib>
+#include <exception>
+#include <format>
+#include <print>
+#include <source_location>
+#include <string_view>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <vector>
+```
+
+IMPORTANT: The scanned header file, which is the source of the doctests, is always included in the generated test file., using a _relative path_ from the location of the generated test file to the location of the header file. To avoid any double definitions, all header files should have header guards or a `#pragma once` directive.
+
+### `--dir`
+
+You usually want to collect all the test files into their own directory.
+You can do this with the `--dir` option:
+
+```sh
+doxytest.py --dir tests include/project/
+```
+
+This will scan for header files in the `include/project/` directory and its subdirectories and use those headers to generate test files.
+The script puts the generated test files in the `doxytests` directory.
+If necessary, the script will create the `tests` directory and error out on failure.
+
+### `--prefix`
+
+By default, a header file called `Foo.h` will generate a test file called `doxy_Foo.cpp`.
+You can change this with the `--prefix` option:
+
+```sh
+doxytest.py --prefix test_ include/project/
+```
+
+Which will generate test files with the `test_` prefix, so `test_Foo.cpp` instead of `doxy_Foo.cpp`.
+
+### `--force`
+
+Doxytest has a rudimentary form of dependency tracking.
+By default, for the sake of efficiency, the script will not regenerate a test file if it already exists and is newer than the header file.
+
+You can force regeneration with the `--force` option:
+
+```sh
+doxytest.py --force include/project/
+```
+
+This will regenerate the test files even if they already exist and are newer than the header files.
+The {doxytest.cmake} module uses this flag as it relies on CMake's more sophisticated notion of dependency tracking, only to invoke the script on a header file if it is completely necessary.
+
+### `--always`
+
+By default, the script will not generate a test file if it doesn't find any doctests.
+You can force the generation of a trivial test file with the `--always` option:
+
+```sh
+doxytest.py --always Foo.h
+```
+
+If it turns out that there are no test code blocks in the header file, the script will generate a test program that prints a message along the lines of "No test code found in `Foo.h`." and exits.
+
+NOTE: This option is helpful if you are running the script on all the header files in a directory where some of those headers have no test code blocks, but you still need a test file to enable the build system to track dependencies coherently.
+
+### `--max_fails`
+
+By default, the generated test programs will exit when they encounter more than 10 doctest failures.
+You can change this with the `--max_fails` option:
+
+```sh
+doxytest.py --max_fails 3 Foo.h
+```
+
+This will cause the generated test program to exit if it encounters more than three doctest failures.
+
+NOTE: If you get a lot of doctest failures, there usually is some fundamental flaw that is relatively easy to fix given a small number of error messages. There is no real value to seeing a long scrolling list of error messages from failure after failure.
+
+### `--combined`
+
+By default, the script generates a separate test file for each header file with doctest code blocks.
+You can instead generate a single combined test file with the `--combined` option:
+
+```sh
+doxytest.py --combined include/project/
+```
+
+This will generate a single test file, `doxytests.cpp`, that contains all the test code blocks from all the header files.
+
+To set the basename of the generated file, provide a name argument also.
+
+```sh
+doxytest.py --combined all_tests_in_one include/project/
+```
+
+This will generate a single test file called `all_tests_in_one.cpp` that contains all the test code blocks from all the header files.
+
+### `--silent`
+
+By default, the script prints progress messages to the console while running.
+You can suppress these with the `--silent` option:
+
+```sh
+doxytest.py --silent include/project/
+```
+
+This will suppress all progress messages but still show error messages, which can be handy in various automated scenarios.
+
+## Summary
+
+Running `doxytest.py --help` will show the current help message:
+
+```txt
+usage: doxytest.py [-h] [-d OUTPUT_DIR] [-i INCLUDE] [-f] [-s] [-a] [-p PREFIX] [-m MAX_FAILS] [-c [COMBINED]] [input_paths ...]
+
+Extracts test code from fenced code blocks in header comments and generates standalone C++ test programs.
+
+positional arguments:
+ input_paths           Header files or directories to scan for embedded test code.
+
+Options:
+ -h, --help            show this help message and exit
+ -d, --dir OUTPUT_DIR  Output directory for generated .cpp files (default: current directory).
+ -i, --include INCLUDE
+ Additional headers to include in generated files (repeatable).
+ -f, --force           Force regeneration even if outputs are newer than inputs.
+ -s, --silent          Suppress progress messages (errors are still shown).
+ -a, --always          Always generate a trivial test file for headers without doctests.
+ -p, --prefix PREFIX   Filename prefix for generated test files (default: doxy_).
+ -m, --max_fails MAX_FAILS
+ Maximum number of allowed test failures before aborting (default: 10).
+ -c, --combined [COMBINED]
+ Generate a combined test file (optional name, default doxytests.cpp).
+
+Examples:
+ doxytest.py include/project/foo.h
+ doxytest.py include/project/
+ doxytest.py include/project/foo.h --dir tests
+ doxytest.py include/project/ -d /tmp/output
+ doxytest.py include/project/foo.h -i "<other_project/Bar.h>" -i "<iostream>"
+ doxytest.py include/project/foo.h --include "<other_project/Bar.h>" --include "<map>"
+ doxytest.py include/project/foo.h --force
+ doxytest.py include/project/ --silent
+ doxytest.py include/project/ --always
+ doxytest.py include/project/ --combined
+ doxytest.py include/project/ --prefix test_
+ doxytest.py include/project/foo.h --max_fails 3
+```
+
+## Next Steps
+
+Get more information about the two provided {doxytest.assertion} macros and perhaps examine some more {doxytest.advanced} custom use scenarios.
+
+If you use CMake, be sure also to check out {doxytest.cmake}.

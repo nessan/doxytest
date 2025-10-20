@@ -1,0 +1,33 @@
+# Shortcuts and links used throughout the documentation.
+
+# Top-level links
+mit-license: "[MIT License](https://opensource.org/license/mit)"
+quarto: "[Quarto](https://quarto.org)"
+repo: "[repository](https://github.com/nessan/doxytest)"
+docs: "[documentation](https://nessan.github.io/doxytest)"
+email: "[email](mailto:nzznfitz+gh@icloud.com)"
+
+# Links to software tools, etc.
+rust: "[Rust](https://www.rust-lang.org)"
+doctests: "[doctests](https://doc.rust-lang.org/rustdoc/write-documentation/documentation-tests.html)"
+crate_docs: "[docs.rs](https://docs.rs)"
+doxygen: "[Doxygen](https://www.doxygen.nl)"
+vscode: "[`VSCode`](https://code.visualstudio.com)"
+cmake_tools: "[`CMake Tools`](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools)"
+gtest: "[`Google Test`](https://github.com/google/googletest)"
+catch2: "[`Catch2`](https://github.com/catchorg/Catch2)"
+
+# Formatted links to CMake pages
+cmake: "[`CMake`](https://cmake.org)"
+cmake_module: "[`CMake module`](https://cmake.org/cmake/help/book/mastering-cmake/chapter/Modules.html)"
+FetchContent: "[`FetchContent`](https://cmake.org/cmake/help/latest/module/FetchContent.html)"
+
+# Formatted links to the script and CMake module pages
+doxytest:
+  script: "[`doxytest.py`](/pages/script/index.qmd)"
+  assertions: "[`assertions`](/pages/script/assertions.qmd)"
+  assertion: "[`assertion`](/pages/script/assertions.qmd)"
+  advanced: "[advanced](/pages/script/advanced.qmd)"
+  custom: "[custom](/pages/script/advanced.qmd)"
+  reference: "[reference](/pages/script/reference.qmd)"
+  cmake: "[`doxytest.cmake`](/pages/cmake/index.qmd)"

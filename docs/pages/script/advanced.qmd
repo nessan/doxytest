@@ -1,0 +1,76 @@
+---
+title: "Advanced Usage"
+---
+
+## The `doxy::error` Exception Class
+
+There is nothing to stop you from rolling your own tests and checks in your doctests.
+For example, if we have the following rather silly test:
+
+```cpp
+/// @brief This function adds two numbers together.
+///
+/// # Examples
+/// ```
+/// if(add(1, 2) <= 3) {
+///     std::println("add(1, 2) should be at most 3");
+///     std::exit(1);
+/// }
+/// ```
+```
+
+The `doxytest.py` script will happily extract this code block as a doctest and embed it in the test program.
+If this test fails, the program will print that little message and exit with a non-zero status.
+
+However, as written, the test is not integrated into the `doxytest "system.
+It is just a small snippet of code embedded in the test program.
+
+To integrate with Doxytest, but still use your own comparison logic, throw a `doxy::error` exception when a test fails.
+You construct a `doxy::error` with a custom message and then throw it to be caught by the framework.
+
+For example:
+
+```cpp
+/// @brief This function adds two numbers together.
+///
+/// # Examples
+/// ```
+/// if(add(1, 2) <= 3) {
+///    throw doxy::error("add(1, 2) should be at most 3");
+/// }
+/// ```
+```
+
+Now, if the test fails, the program will print a message and continue running the other doctests until it reaches the usual `max_fails` limit, and you will still get a nice summary at the end of the test program execution.
+
+## Test Setup
+
+Sometimes you need to have some setup code before you can run a doctest.
+
+For instance, if you have tests that require a database connection, you need to connect to the database before you can run any tests.
+Rather than setting up that connection for each doctest, you can use a specially marked setup code block to do it just once.
+To do this,  mark a fenced code block with the `doxytest` kind:
+
+```cpp
+/// @brief The doctests in this file require a database connection, which we establish here.
+///
+/// ```doxytest                             // <1>
+/// auto db = connect_to_database(...);
+/// ...
+/// ```
+```
+1. Notice the specially marked fenced code block.
+
+The `doxytest.py` script will extract this code block as _setup code_ and embed it in the test program before the first doctest.
+In general, any fenced code block marked with the `doxytest` kind will be extracted as setup code and embedded in the test program before the next doctest code block in the header file.
+
+- There can be any number of setup code blocks in a header file.
+- The setup blocks will be executed in the order they appear in the header file.
+
+## Next Steps
+
+See the full {doxytest.reference} for all the options understood by `doxytest.py`.
+
+Get more information about the two provided {doxytest.assertion} macros.
+
+If you use CMake, be sure also to check out {doxytest.cmake}.
