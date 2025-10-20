@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------------------------------------------------------------
 # Extract tests from comments in header files and add targets for each resulting test file.
-# See: https://nessan.github.io/cmake/
+# See: https://nessan.github.io/doxytest/
 #
 # SPDX-FileCopyrightText:  2025 Nessan Fitzmaurice <nessan.fitzmaurice@me.com>
 # SPDX-License-Identifier: MIT
