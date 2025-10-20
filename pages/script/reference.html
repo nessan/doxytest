@@ -529,8 +529,8 @@ The scanned header file, which is the source of the doctests, is always included
 <section id="dir" class="level3">
 <h3 class="anchored" data-anchor-id="dir"><code>--dir</code></h3>
 <p>You usually want to collect all the test files into their own directory. You can do this with the <code>--dir</code> option:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--dir</span> tests include/project/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This will scan for header files in the <code>include/project/</code> directory and its subdirectories and use those headers to generate test files. The script puts the generated test files in the <code>doxytests</code> directory. If necessary, the script will create the <code>tests</code> directory and error out on failure.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--dir</span> doxytests include/project/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This will scan for header files in the <code>include/project/</code> directory and its subdirectories and use those headers to generate test files. The script puts the generated test files in the <code>doxytests</code> directory. If necessary, the script will create the <code>doxytests</code> directory and error out on failure.</p>
 </section>
 <section id="prefix" class="level3">
 <h3 class="anchored" data-anchor-id="prefix"><code>--prefix</code></h3>
