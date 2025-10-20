@@ -63,12 +63,12 @@ You usually want to collect all the test files into their own directory.
 You can do this with the `--dir` option:
 
 ```sh
-doxytest.py --dir tests include/project/
+doxytest.py --dir doxytests include/project/
 ```
 
 This will scan for header files in the `include/project/` directory and its subdirectories and use those headers to generate test files.
 The script puts the generated test files in the `doxytests` directory.
-If necessary, the script will create the `tests` directory and error out on failure.
+If necessary, the script will create the `doxytests` directory and error out on failure.
 
 ### `--prefix`
 

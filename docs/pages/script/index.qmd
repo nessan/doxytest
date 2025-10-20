@@ -207,7 +207,7 @@ Which will print the message:
 Generated test file: doxy_Student.cpp with 7 test cases.
 ```
 
-And create the file `doxy_Student.cpp` in the current directory, which you can compile and run:
+The script creates the file `doxy_Student.cpp` in the current directory, which you can compile and run:
 
 ```sh
 g++ -std=c++23 -o doxy_Student doxy_Student.cpp  # <1>
