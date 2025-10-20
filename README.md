@@ -34,7 +34,7 @@ Typical CMake projects have a top-level `cmake/` subdirectory for their CMake mo
 
 ## Documentation
 
-Doxytest comes with complete [documentation](https://nessan.github.io/doxyhtest).
+Doxytest comes with complete [documentation](https://nessan.github.io/doxytest).
 We generated the site using [Quarto](https://quarto.org).
 
 ## A Simple Example
