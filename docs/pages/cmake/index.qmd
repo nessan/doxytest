@@ -4,7 +4,7 @@ title: "`doxytest.cmake`"
 
 ## Introduction
 
-`doxytest.cmake` is a CMake module that automates the process of extracting tests from comments in header files and adding build targets for the resulting test programs.
+`doxytest.cmake` is a CMake module that automates the process of extracting tests from documentation and adding build targets for the resulting test programs.
 It defines a single CMake function called `doxytest` which is a wrapper around the {doxytest.script} script.
 
 ## Usage
@@ -25,8 +25,9 @@ Assuming everything goes well, CMake builds will generate  two test source files
 - `doxytests/doxy_foo.cpp`
 - `doxytests/doxy_bar.cpp`
 
-Note that the default output directory for the test source files is `doxytests/`. That script creates the directory if necessary.
-Also note that, by default, each test source file has a name that has a prefix (by default, `doxy_`) followed by the base name of the corresponding header file.
+Note that the default output directory for the test source files is `doxytests/`.
+The script creates the directory if necessary.
+Also note that, by default, each test source file has a name that has a prefix (by default, `doxy_`) followed by the base name of the source file for the doctests.
 
 The `doxy_foo.cpp` source file will have an include directive for the `foo.h` header file, and the `doxy_bar.cpp` source file will have an include directive for the `bar.h` header file.
 The path to the header files is relative to the location of the test source file, so something like:
@@ -94,7 +95,7 @@ The directory where our script will write the test source files, which by defaul
 ```cmake
 doxytest(include/foo.h DOXY_DIR tests/)
 ```
-This will generate test files in a top-level subdirectory called `tests/`.
+This will generate test files in the top-level `tests/` subdirectory.
 This directory is relative to the `CMAKE_SOURCE_DIR`.
 
 If necessary, the script creates the directory; otherwise, the module will error out if the operation fails or if the directory is not writeable.
@@ -127,7 +128,7 @@ WARNING: All included headers should have header guards or a `#pragma once` dire
 
 ### `LIBRARIES <libs>`
 
-This is another commonly used option.
+Another commonly used option.
 It allows you to specify a list of libraries to link to the test executables.
 For example, if you are testing a library called `my_lib`, you may want to link to the `my_lib` library in the test executables.
 The `LIBRARIES` option achieves this:
@@ -142,7 +143,7 @@ The `LIBRARIES` option can be given a list of multiple libraries to link to.
 
 ### `DOXY_MODE <mode>`
 
-This option controls the type of output from the script.
+This option controls the script's output type.
 By default, the `doxytest` function generates _both_ individual test files and a combined test file.
 You can change this by passing the `DOXY_MODE` option to the `doxytest` function:
 
@@ -223,7 +224,7 @@ Here's what it looks like when the project is open in {vscode}:
 ![Editing the project in VSCode](VSCode.png)
 
 
-The `CMakeLists.txt` file in the root of the project uses the `doxytest.cmake` module to extract the doctests from the headers in the `include/calc/` directory and package them as test source code it puts in the `doxytests/` directory.
+The `CMakeLists.txt` file at the root of the project uses the `doxytest.cmake` module to extract the doctests from the headers in the `include/calc/` directory and package them as test source code, placing them in the `doxytests/` directory.
 Targets to build and run those tests are then made available. That includes a target for a combined test program `doxytests`.
 
 The {cmake_tools} extension for VSCode add several buttons to bottom of the editor window to build, run, and debug the project.

@@ -14,7 +14,7 @@ The assertions are:
 The `assert` macro is a simple boolean condition checker that expands to an `if` statement that checks the condition and throws a `doxy::error` exception if the condition is false.
 You can also pass a variadic argument list of additional arguments that are sent to the `std::format` function to produce a custom message, which also becomes part of the `doxy::error.what` string.
 
-The `assert_eq` macro is a macro for checking equality that expands to an `if` statement that checks if the first two arguments are equal and throws a `doxy::error` exception if they are not.
+The `assert_eq` macro is a macro for checking equality that expands to an `if` statement that compares the first two arguments and throws a `doxy::error` exception if they are not equal.
 You can also pass a variadic argument list of additional arguments that are sent to the `std::format` function to produce a custom message, which also becomes part of the `doxy::error.what` string.
 
 For example:
@@ -36,7 +36,7 @@ rhs = ...                                                   # <3>
 3. This is the value of the `b` argument that went into the assertion.
 
 
-IMPORTANT: The first two `lhs` and `rhs` arguments to `assert_eq` must be printable using `std::format`. If they are your own types, they will need to have an appropriate specialisation for `std::formatter`.
+IMPORTANT: The first two `a` and `b` arguments to `assert_eq` must be printable using `std::format`. If they are your own types, they will need to have an appropriate specialisation for `std::formatter`.
 
 NOTE: If a failure occurs, the error message displays the location of the corresponding doctest in the source header file. We only show the basename for the header file. Showing the full path is generally overkill and results in very noisy error messages.
 

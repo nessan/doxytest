@@ -26,7 +26,7 @@ However, as written, the test is not integrated into the `doxytest "system.
 It is just a small snippet of code embedded in the test program.
 
 To integrate with Doxytest, but still use your own comparison logic, throw a `doxy::error` exception when a test fails.
-You construct a `doxy::error` with a custom message and then throw it to be caught by the framework.
+You construct a `doxy::error` with a custom message, then throw it so the framework can catch it.
 
 For example:
 
@@ -45,11 +45,11 @@ Now, if the test fails, the program will print a message and continue running th
 
 ## Test Setup
 
-Sometimes you need to have some setup code before you can run a doctest.
+Sometimes you need setup code before you can run a doctest.
 
 For instance, if you have tests that require a database connection, you need to connect to the database before you can run any tests.
 Rather than setting up that connection for each doctest, you can use a specially marked setup code block to do it just once.
-To do this,  mark a fenced code block with the `doxytest` kind:
+To do this,  mark a fenced code block with the `doxytest` or `doxy` kind:
 
 ```cpp
 /// @brief The doctests in this file require a database connection, which we establish here.
@@ -71,6 +71,6 @@ In general, any fenced code block marked with the `doxytest` kind will be extrac
 
 See the full {doxytest.reference} for all the options understood by `doxytest.py`.
 
-Get more information about the two provided {doxytest.assertion} macros.
+Get more information about the two {doxytest.assertion} macros provided.
 
 If you use CMake, be sure also to check out {doxytest.cmake}.

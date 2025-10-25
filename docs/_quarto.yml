@@ -38,6 +38,7 @@ website:
   image: "images/logo.svg"
   favicon: "images/logo.svg"
   open-graph: true
+  google-analytics: G-62CQE8TY0X
   site-url: "https://nessan.github.io/doxytest"
   repo-url: "https://github.com/nessan/doxytest"
   repo-subdir: docs

@@ -20,6 +20,7 @@ The following options are available:
 - `-h, --help`: Show help message and exit.
 - `-i, --include HEADER`: A header file to include in generated test files (you can specify this option multiple times).
 - `-d, --dir DIR`: Output directory for the generated `.cpp` files (default is the current directory).
+- `-e, --extensions EXTENSIONS`: Which file types to scan for doctests in a directory (default is `"h, hpp"`).
 - `-p, --prefix PREFIX`: Prefix to use for the generated test filenames (default is `doxy_`).
 - `-f, --force`: Force regeneration of test files even if they exist and are newer than the header file.
 - `-a, --always`: Always generate a trivial test file even if the script finds no test code block in the header.
@@ -55,20 +56,42 @@ The generated test files always include several system headers:
 #include <vector>
 ```
 
-IMPORTANT: The scanned header file, which is the source of the doctests, is always included in the generated test file., using a _relative path_ from the location of the generated test file to the location of the header file. To avoid any double definitions, all header files should have header guards or a `#pragma once` directive.
+IMPORTANT: Any scanned header file that is the source of doctests is always included in the generated test file, using a _relative path_ from the location of the generated test file to the location of the header file. To avoid double definitions, all header files should include a header guard or a `#pragma once` directive (which they should in any case).
 
 ### `--dir`
 
-You usually want to collect all the test files into their own directory.
+You can collect all test files into a single directory.
 You can do this with the `--dir` option:
 
 ```sh
 doxytest.py --dir doxytests include/project/
 ```
 
-This will scan for header files in the `include/project/` directory and its subdirectories and use those headers to generate test files.
+This will scan the header files in the `include/project/` directory for doctests to extract as test programss.
 The script puts the generated test files in the `doxytests` directory.
 If necessary, the script will create the `doxytests` directory and error out on failure.
+
+### `--extensions`
+
+By default, if you point `doxyscript.py` at a directory it will only scan header files for embedded doctests.
+It identifies those files by looking for `.h` and `.hpp` extensions.
+
+You can use the `-e/--extensions` option to change that.
+For example to scan the `docs` directory for doctests in Markdown files:
+
+```sh
+doxytest.py --extensions "md" docs
+```
+
+To scan the `src` directory for doctests in headers and implementation files you could do:
+
+```sh
+doxytest.py --extensions "h, hpp, cpp" src
+```
+
+Whitespace, commas, or semicolons should separate the list of files extensions.
+
+NOTE: Typically, doctests are in header files. If `Foo.h` or `Foo.hpp` has doctests, the corresponding test file will be called `doxy_Foo.cpp` though you can change the `doxy_` prefix as documented below. If there are doctests in a related file `Foo.extension`, those tests will be put in a test source called `doxy_Foo_extension.cpp`. So doctests in `Foo.md` generate a `doxy_Foo_md.cpp` file, doctests in `Foo.cpp` generate a `doxy_Foo_cpp.cpp` file.
 
 ### `--prefix`
 
@@ -79,7 +102,7 @@ You can change this with the `--prefix` option:
 doxytest.py --prefix test_ include/project/
 ```
 
-Which will generate test files with the `test_` prefix, so `test_Foo.cpp` instead of `doxy_Foo.cpp`.
+Now we will generate test files with the `test_` prefix, so `test_Foo.cpp` instead of `doxy_Foo.cpp`.
 
 ### `--force`
 
@@ -130,19 +153,19 @@ You can instead generate a single combined test file with the `--combined` optio
 doxytest.py --combined include/project/
 ```
 
-This will generate a single test file, `doxytests.cpp`, that contains all the test code blocks from all the header files.
+This will generate a single test file, `doxytests.cpp`, containing all test code blocks from all header files.
 
-To set the basename of the generated file, provide a name argument also.
+To set the basename of the generated file, also provide a name argument.
 
 ```sh
 doxytest.py --combined all_tests_in_one include/project/
 ```
 
-This will generate a single test file called `all_tests_in_one.cpp` that contains all the test code blocks from all the header files.
+This will generate a single test file, `all_tests_in_one.cpp`, that contains all the test code blocks from all the header files.
 
 ### `--silent`
 
-By default, the script prints progress messages to the console while running.
+By default, the script prints progress messages to the console as it runs.
 You can suppress these with the `--silent` option:
 
 ```sh
@@ -156,44 +179,48 @@ This will suppress all progress messages but still show error messages, which ca
 Running `doxytest.py --help` will show the current help message:
 
 ```txt
-usage: doxytest.py [-h] [-d OUTPUT_DIR] [-i INCLUDE] [-f] [-s] [-a] [-p PREFIX] [-m MAX_FAILS] [-c [COMBINED]] [input_paths ...]
+usage: doxytest.py [-h] [-e EXTENSIONS] [-d OUTPUT_DIR] [-i INCLUDE] [-f] [-s] [-a] [-p PREFIX] [-m MAX_FAILS] [-c [COMBINED]] [input_paths ...]
 
-Extracts test code from fenced code blocks in header comments and generates standalone C++ test programs.
+Extracts test code from fenced code blocks in documentation and generates standalone C++ test programs.
 
 positional arguments:
- input_paths           Header files or directories to scan for embedded test code.
+  input_paths           Files or directories to scan for embedded test code.
 
-Options:
- -h, --help            show this help message and exit
- -d, --dir OUTPUT_DIR  Output directory for generated .cpp files (default: current directory).
- -i, --include INCLUDE
- Additional headers to include in generated files (repeatable).
- -f, --force           Force regeneration even if outputs are newer than inputs.
- -s, --silent          Suppress progress messages (errors are still shown).
- -a, --always          Always generate a trivial test file for headers without doctests.
- -p, --prefix PREFIX   Filename prefix for generated test files (default: doxy_).
- -m, --max_fails MAX_FAILS
- Maximum number of allowed test failures before aborting (default: 10).
- -c, --combined [COMBINED]
- Generate a combined test file (optional name, default doxytests.cpp).
+options:
+  -h, --help            show this help message and exit
+  -e, --extensions EXTENSIONS
+                        List of file extensions to scan for tests (default: .h, .hpp). Separate values with commas, whitespace, or semicolons.
+  -d, --dir OUTPUT_DIR  Output directory for generated .cpp files (default: current directory).
+  -i, --include INCLUDE
+                        Additional header include to add to generated files (repeatable).
+  -f, --force           Force regeneration even if outputs are newer than inputs.
+  -s, --silent          Suppress progress messages (errors are still shown).
+  -a, --always          Always generate a trivial test file even if no test blocks are found.
+  -p, --prefix PREFIX   Filename prefix for generated test files (default: doxy_).
+  -m, --max_fails MAX_FAILS
+                        Maximum number of allowed test failures before aborting (default: 10).
+  -c, --combined [COMBINED]
+                        Generate a combined test file (optional name, default doxytests.cpp).
 
 Examples:
- doxytest.py include/project/foo.h
- doxytest.py include/project/
- doxytest.py include/project/foo.h --dir tests
- doxytest.py include/project/ -d /tmp/output
- doxytest.py include/project/foo.h -i "<other_project/Bar.h>" -i "<iostream>"
- doxytest.py include/project/foo.h --include "<other_project/Bar.h>" --include "<map>"
- doxytest.py include/project/foo.h --force
- doxytest.py include/project/ --silent
- doxytest.py include/project/ --always
- doxytest.py include/project/ --combined
- doxytest.py include/project/ --prefix test_
+  doxytest.py include/project/foo.h
+  doxytest.py include/project/
+  doxytest.py include/project/ --extensions "h, cpp, md"
+  doxytest.py include/project/foo.h --dir tests
+  doxytest.py include/project/ -d /tmp/output
+  doxytest.py include/project/foo.h -i "<other_project/Bar.h>" -i "<iostream>"
+  doxytest.py include/project/foo.h --include "<other_project/Bar.h>" --include "<map>"
+  doxytest.py include/project/foo.h --force
+  doxytest.py include/project/ --silent
+  doxytest.py include/project/ --always
+  doxytest.py include/project/ --combined
+  doxytest.py include/project/ --prefix test_
+  doxytest.py include/project/foo.h --max_fails 3
  doxytest.py include/project/foo.h --max_fails 3
 ```
 
 ## Next Steps
 
-Get more information about the two provided {doxytest.assertion} macros and perhaps examine some more {doxytest.advanced} custom use scenarios.
+Get more information about the two provided {doxytest.assertion} macros and examine some more {doxytest.advanced} custom use scenarios.
 
 If you use CMake, be sure also to check out {doxytest.cmake}.
