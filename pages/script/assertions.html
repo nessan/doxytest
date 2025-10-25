@@ -110,6 +110,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-62CQE8TY0X"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-62CQE8TY0X', { 'anonymize_ip': true});
+</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
@@ -482,7 +491,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>assert_eq(a, b, [OPTIONAL_MESSAGE], [...])</code>: Assert that two values are equal.</li>
 </ul>
 <p>The <code>assert</code> macro is a simple boolean condition checker that expands to an <code>if</code> statement that checks the condition and throws a <code>doxy::error</code> exception if the condition is false. You can also pass a variadic argument list of additional arguments that are sent to the <code>std::format</code> function to produce a custom message, which also becomes part of the <code>doxy::error.what</code> string.</p>
-<p>The <code>assert_eq</code> macro is a macro for checking equality that expands to an <code>if</code> statement that checks if the first two arguments are equal and throws a <code>doxy::error</code> exception if they are not. You can also pass a variadic argument list of additional arguments that are sent to the <code>std::format</code> function to produce a custom message, which also becomes part of the <code>doxy::error.what</code> string.</p>
+<p>The <code>assert_eq</code> macro is a macro for checking equality that expands to an <code>if</code> statement that compares the first two arguments and throws a <code>doxy::error</code> exception if they are not equal. You can also pass a variadic argument list of additional arguments that are sent to the <code>std::format</code> function to produce a custom message, which also becomes part of the <code>doxy::error.what</code> string.</p>
 <p>For example:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>assert_eq<span class="op">(</span>a<span class="op">,</span> b<span class="op">,</span> <span class="st">"Are the lengths off? a.len() = </span><span class="sc">{}</span><span class="st">, b.len() = </span><span class="sc">{}</span><span class="st">"</span><span class="op">,</span> a<span class="op">.</span>len<span class="op">(),</span> b<span class="op">.</span>len<span class="op">());</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If the assertion fails, the program will print the custom message along with the values of the arguments to the assertion, which might look like this:</p>
@@ -509,7 +518,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <td class="icon"> <i class="fa icon-important" title="Important"></i></td>
     <td class="content">
     
-The first two <code>lhs</code> and <code>rhs</code> arguments to <code>assert_eq</code> must be printable using <code>std::format</code>. If they are your own types, they will need to have an appropriate specialisation for <code>std::formatter</code>.
+The first two <code>a</code> and <code>b</code> arguments to <code>assert_eq</code> must be printable using <code>std::format</code>. If they are your own types, they will need to have an appropriate specialisation for <code>std::formatter</code>.
 </td></tr></tbody></table></div>
 <div class="admonition note">
     <table><tbody><tr>

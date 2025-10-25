@@ -108,6 +108,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-62CQE8TY0X"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-62CQE8TY0X', { 'anonymize_ip': true});
+</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
@@ -467,7 +476,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><br></p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Doxytest is a tool for generating C++ test programs from code embedded in header file comments.</p>
+<p>Doxytest is a tool for generating C++ test programs from documentation, for example, from code embedded in header file comments.</p>
 <p>The inspiration is a <a href="https://www.rust-lang.org">Rust</a> feature called <a href="https://doc.rust-lang.org/rustdoc/write-documentation/documentation-tests.html">doctests</a>.</p>
 <p>A Rust doctest is a snippet of sample code in the documentation block above a function or type definition. The example becomes part of the documentation you see on <a href="https://docs.rs">docs.rs</a>. Moreover, examples are typically formulated using assertions and become part of the project’s test suite.</p>
 <p>Here is a very high-tech Rust <code>add</code> function — PhD-level sort of stuff:</p>
@@ -483,25 +492,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The comment block above the function definition contains a typical working code example. The sample is wrapped in a triple backtick-delimited code block and formulated as a test using Rust’s <code>assert_eq!</code> macro. It is a <em>doctest</em>.</p>
 <p>Rust’s <code>cargo doc</code> command picks out specially marked comments and turns them into your project’s “official” documentation. <a href="https://www.doxygen.nl">Doxygen</a> can similarly generate documentation for C++ functions.</p>
 <p>However, Rust doctests are not just part of the documentation; they are also used to generate test programs. The <code>cargo test</code> command collects all the project’s doctests by looking for comments containing triple backtick-delimited code blocks. The extracted doctests are then compiled and run as test programs.</p>
-<p>Looking through the source code of Rust crates, you will see <em>lots</em> of embedded doctests. Code in <code>Examples</code> sections is usually crafted as tests using Rust’s <code>assert!</code> and <code>assert_eq!</code> macros.</p>
+<p>Looking through the source code of Rust crates, you will see <em>lots</em> of embedded doctests. Example code is usually crafted as tests using Rust’s <code>assert!</code> and <code>assert_eq!</code> macros.</p>
 <p>At first, I was sceptical about the value of this scheme. There are many comment lines in a typical Rust source file! That can make them daunting to navigate.</p>
-<p>However, after embracing my editor’s ability to fold comments and using the doctest feature in Rust for a while, I began to wish to do the same thing in C++. Why not have simple code samples documenting how to use a function and serving as basic tests?</p>
-<p>Hence, the Python script <a href="../pages/script/index.html"><code>doxytest.py</code></a> extracts code snippets from the comments in C++ header files and uses them to generate standalone C++ test programs. A companion <a href="https://cmake.org"><code>CMake</code></a> module <a href="../pages/cmake/index.html"><code>doxytest.cmake</code></a> integrates the script into a CMake project.</p>
+<p>However, after embracing my editor’s ability to fold comments and using Rust’s doctest feature for a while, I began to wish to do the same in C++. Why not have simple code samples that document how to use a function and serve as basic tests?</p>
+<p>Hence, the Python script <a href="../pages/script/index.html"><code>doxytest.py</code></a> which looks for fenced code blocks — <em>doctests</em>. The script extracts the doctests, wraps them in <code>try</code> blocks to catch any failures, and then embeds them in a standalone test program.</p>
+<p>A companion <a href="https://cmake.org"><code>CMake</code></a> module <a href="../pages/cmake/index.html"><code>doxytest.cmake</code></a> integrates the script into a CMake project.</p>
 </section>
 <section id="scope" class="level2">
 <h2 class="anchored" data-anchor-id="scope">Scope</h2>
 <p>Doxytest is a simple tool for generating C++ test programs from code embedded in header file comments. It’s not a replacement for a full-blown testing framework like <a href="https://github.com/catchorg/Catch2"><code>Catch2</code></a> or <a href="https://github.com/google/googletest"><code>Google Test</code></a>.</p>
-<p>Doctests are typically just a few lines of code crafted as tests, and they primarily illustrate how to use a function or class. You’re unlikely to write many complicated edge case codes as comments in a header file.</p>
-<p>On the other hand, once you get used to the idea, you tend to write a doctest for almost every function or class you write. So, while the depth of test coverage may not be as high as that of a full-blown testing framework, the breadth of coverage will be pretty impressive.</p>
-<p>The breadth of coverage is very valuable when adding new features or fixing bugs. Compiling all the doctests can serve as a quick sanity check to see if you have inadvertently broken something else. And, of course, running the tests will help you catch at least basic regression errors.</p>
-<p>If you are using Rust in an IDE like <a href="https://code.visualstudio.com"><code>VSCode</code></a>, you can run the doctest for an individual method by clicking a discrete “Run” above the method in the IDE. A “Run” button above a type definition runs all the doctests for that type.</p>
-<p>We haven’t yet implemented a <code>doxytest</code> extension for <a href="https://code.visualstudio.com"><code>VSCode</code></a>. However, we have a CMake module, <a href="../pages/cmake/index.html"><code>doxytest.cmake</code></a>, that can automate extracting those tests and adding build targets for each resulting test program. This is already very useful and, if you are using the CMake Tools extension for <a href="https://code.visualstudio.com"><code>VSCode</code></a>, it will let you easily run doctests at the click of a button.</p>
+<p>Doctests are typically just a few lines of code crafted as tests — they primarily illustrate how to use a function or class. You’re unlikely to write many complicated edge case codes as comments in a header file.</p>
+<p>On the other hand, once you get used to the idea, you tend to write a doctest for almost every function or class you write. So, while the depth of test coverage may not be as high as that of a full-blown testing framework, the breadth of coverage is excellent.</p>
+<p>That breadth of coverage is very valuable when adding new features or fixing bugs. Compiling all the doctests can serve as a quick sanity check to see if you have inadvertently broken something else. And, of course, running the tests will help you catch at least basic regression errors.</p>
+<p>If you are using Rust in an IDE like <a href="https://code.visualstudio.com"><code>VSCode</code></a>, you can run the doctest for an individual method by clicking the “Run” button above the method. A “Run” button above a type definition runs all the doctests for that type.</p>
+<p>We haven’t yet implemented a <code>doxytest</code> extension for <a href="https://code.visualstudio.com"><code>VSCode</code></a>. However, we have a CMake module, <a href="../pages/cmake/index.html"><code>doxytest.cmake</code></a>, that can automate extracting those tests and adding build targets for each resulting test program. This is already very useful, and if you are using the CMake Tools extension for <a href="https://code.visualstudio.com"><code>VSCode</code></a>, it lets you run doctests with a single click.</p>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <p>Doxytest has two main components:</p>
 <ul>
-<li>The main event is a Python script <a href="../pages/script/index.html"><code>doxytest.py</code></a> that generates standalone C++ test programs from code embedded in header file comments.</li>
+<li>The main event is a Python script <a href="../pages/script/index.html"><code>doxytest.py</code></a> that generates standalone C++ test programs from code embedded in documentation. Typically, these are comments above types and methods in header files.</li>
 <li>There is also a companion <a href="https://cmake.org/cmake/help/book/mastering-cmake/chapter/Modules.html"><code>CMake module</code></a> called <a href="../pages/cmake/index.html"><code>doxytest.cmake</code></a> that can automate extracting those tests and adding build targets for each resulting test program.</li>
 </ul>
 <div class="admonition tip">
@@ -509,19 +519,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <td class="icon"> <i class="fa icon-tip" title="Tip"></i></td>
     <td class="content">
     
-If you don’t use <a href="https://cmake.org"><code>CMake</code></a>, you can use the Python script directly. The module is a convenience wrapper around the script, with no dependencies on CMake.
+If you don’t use <a href="https://cmake.org"><code>CMake</code></a>, you can use the Python script directly. The module is a convenience wrapper around the script. The script has no CMake dependencies.
 </td></tr></tbody></table></div>
 <section id="python-script-features" class="level3">
 <h3 class="anchored" data-anchor-id="python-script-features">Python Script Features</h3>
 <ul>
-<li>The Python script generates standalone C++ test programs from code embedded in header file comments.</li>
-<li>It can generate those programs for multiple header files in a single run.</li>
-<li>It can generate a single test program containing all the combined test code from multiple header files.</li>
+<li>The Python script generates standalone C++ test programs from code embedded in documentation.</li>
+<li>It can generate those programs by scanning multiple files or directories in a single run.</li>
+<li>It can generate a single test program containing all the combined test code from multiple sources.</li>
 <li>The script supports a variety of options for controlling the generation of test programs:
 <ul>
 <li>You can specify the output directory for the generated test programs.</li>
 <li>You have control over the filename prefix for the generated test programs.</li>
 <li>You can specify extra header files to include in the generated test programs.</li>
+<li>You can control which files in a directory to scan for doctests.</li>
 </ul></li>
 <li>The script has rudimentary dependency tracking, which means that the generated test programs are only recreated if the corresponding header files change.</li>
 </ul>
@@ -529,14 +540,15 @@ If you don’t use <a href="https://cmake.org"><code>CMake</code></a>, you can u
 <section id="cmake-module-features" class="level3">
 <h3 class="anchored" data-anchor-id="cmake-module-features">CMake Module Features</h3>
 <ul>
-<li>The CMake module automates the process of extracting those tests, and it adds build targets for each resulting test program. It will also let you easily run individual tests inside an IDE like <a href="https://code.visualstudio.com"><code>VSCode</code></a> at the click of a button.</li>
-<li>Like the script, the module can generate test programs for multiple header files in a single run.</li>
-<li>Like the script, the module can generate a single test program containing all the combined test code from multiple header files.</li>
+<li>The CMake module automates the process of extracting those tests, and it adds build targets for each resulting test program. It will also let you easily run individual tests in an IDE like <a href="https://code.visualstudio.com"><code>VSCode</code></a> with a single click.</li>
+<li>Like the script, the module can generate test programs for multiple sources and directories in a single run.</li>
+<li>Like the script, the module can generate a single test program containing all the combined test code from multiple sources.</li>
 <li>The module supports a variety of options for controlling the generation of test programs:
 <ul>
 <li>You can specify the output directory for the generated test programs.</li>
 <li>You have control over the filename prefix for the generated test programs.</li>
 <li>You can specify custom header files to include in the generated test programs.</li>
+<li>You can control which files in a directory are scanned for doctests.</li>
 </ul></li>
 <li>The module uses CMake to handle the dependency tracking so that the generated test programs are only rebuilt if the corresponding header files change or the script is updated.</li>
 </ul>
@@ -555,7 +567,7 @@ If you don’t use <a href="https://cmake.org"><code>CMake</code></a>, you can u
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-2" data-code-lines="5" data-code-annotation="1"><code>assert_eq</code> is used to assert that two values are equal. <br> On failure, it prints the values of the arguments and may terminate the program.</span>
+<span data-code-cell="annotated-cell-2" data-code-lines="5" data-code-annotation="1"><code>assert_eq</code> is used to assert that two values are equal. <br> On failure, it prints the argument values and may terminate the program.</span>
 </dd>
 </dl>
 <div class="admonition note">
@@ -563,11 +575,11 @@ If you don’t use <a href="https://cmake.org"><code>CMake</code></a>, you can u
     <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
     <td class="content">
     
-C++ has an <code>assert</code> macro, but it is not very useful for testing because it does not print the values of the expression that failed the assertion. For that reason, in the <code>doxytest</code> generated code, we overwrite that with our own version of <code>assert</code> and also provide the <code>assert_eq</code> macro, referenced in the example. The two doxytest <a href="../pages/script/assertions.html"><code>assertion</code></a> macros are automatically defined and included in the test programs generated by <code>doxytest.py</code>. They only have an effect in test code extracted from doctests.
+C++ has an <code>assert</code> macro, but it is not very useful for testing because it does not print the values of the expression that failed the assertion. For that reason, in the <code>doxytest</code>-generated code, we override the’ assert’ macro with our own <code>assert</code> and also provide the <code>assert_eq</code> macro, as referenced in the example. The two doxytest <a href="../pages/script/assertions.html"><code>assertion</code></a> macros are automatically defined and included in the test programs generated by <code>doxytest.py</code>. They only affect test code extracted from doctests.
 </td></tr></tbody></table></div>
 <p>You can run the <code>doxytest.py</code> script on this header file:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> add.h</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Which will print the message <code>Generated test file: doxy_add.cpp with 1 test cases</code> and then create the file <code>doxy_add.cpp</code> in the current directory.</p>
+<p>This command will print the message <code>Generated test file: doxy_add.cpp with 1 test cases</code> and then create the file <code>doxy_add.cpp</code> in the current directory.</p>
 <p>If you look at <code>doxy_add.cpp</code>, you will see an include directive for <code>add.h</code>, the definition of our version of <code>assert</code> and <code>assert_eq</code>, and a main program that contains the tests (just one in this example) in their own <code>try</code> blocks.</p>
 <p>You can compile the test program using your favourite C++ compiler; for example, using <code>g++</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">g++</span> <span class="at">-std</span><span class="op">=</span>c++23 <span class="at">-o</span> doxy_add doxy_add.cpp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

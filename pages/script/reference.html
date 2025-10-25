@@ -110,6 +110,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-62CQE8TY0X"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-62CQE8TY0X', { 'anonymize_ip': true});
+</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
@@ -447,6 +456,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#include" id="toc-include" class="nav-link" data-scroll-target="#include"><code>--include</code></a></li>
   <li><a href="#dir" id="toc-dir" class="nav-link" data-scroll-target="#dir"><code>--dir</code></a></li>
+  <li><a href="#extensions" id="toc-extensions" class="nav-link" data-scroll-target="#extensions"><code>--extensions</code></a></li>
   <li><a href="#prefix" id="toc-prefix" class="nav-link" data-scroll-target="#prefix"><code>--prefix</code></a></li>
   <li><a href="#force" id="toc-force" class="nav-link" data-scroll-target="#force"><code>--force</code></a></li>
   <li><a href="#always" id="toc-always" class="nav-link" data-scroll-target="#always"><code>--always</code></a></li>
@@ -493,6 +503,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>-h, --help</code>: Show help message and exit.</li>
 <li><code>-i, --include HEADER</code>: A header file to include in generated test files (you can specify this option multiple times).</li>
 <li><code>-d, --dir DIR</code>: Output directory for the generated <code>.cpp</code> files (default is the current directory).</li>
+<li><code>-e, --extensions EXTENSIONS</code>: Which file types to scan for doctests in a directory (default is <code>"h, hpp"</code>).</li>
 <li><code>-p, --prefix PREFIX</code>: Prefix to use for the generated test filenames (default is <code>doxy_</code>).</li>
 <li><code>-f, --force</code>: Force regeneration of test files even if they exist and are newer than the header file.</li>
 <li><code>-a, --always</code>: Always generate a trivial test file even if the script finds no test code block in the header.</li>
@@ -523,32 +534,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <td class="icon"> <i class="fa icon-important" title="Important"></i></td>
     <td class="content">
     
-The scanned header file, which is the source of the doctests, is always included in the generated test file., using a <em>relative path</em> from the location of the generated test file to the location of the header file. To avoid any double definitions, all header files should have header guards or a <code>#pragma once</code> directive.
+Any scanned header file that is the source of doctests is always included in the generated test file, using a <em>relative path</em> from the location of the generated test file to the location of the header file. To avoid double definitions, all header files should include a header guard or a <code>#pragma once</code> directive (which they should in any case).
 </td></tr></tbody></table></div>
 </section>
 <section id="dir" class="level3">
 <h3 class="anchored" data-anchor-id="dir"><code>--dir</code></h3>
-<p>You usually want to collect all the test files into their own directory. You can do this with the <code>--dir</code> option:</p>
+<p>You can collect all test files into a single directory. You can do this with the <code>--dir</code> option:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--dir</span> doxytests include/project/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This will scan for header files in the <code>include/project/</code> directory and its subdirectories and use those headers to generate test files. The script puts the generated test files in the <code>doxytests</code> directory. If necessary, the script will create the <code>doxytests</code> directory and error out on failure.</p>
+<p>This will scan the header files in the <code>include/project/</code> directory for doctests to extract as test programss. The script puts the generated test files in the <code>doxytests</code> directory. If necessary, the script will create the <code>doxytests</code> directory and error out on failure.</p>
+</section>
+<section id="extensions" class="level3">
+<h3 class="anchored" data-anchor-id="extensions"><code>--extensions</code></h3>
+<p>By default, if you point <code>doxyscript.py</code> at a directory it will only scan header files for embedded doctests. It identifies those files by looking for <code>.h</code> and <code>.hpp</code> extensions.</p>
+<p>You can use the <code>-e/--extensions</code> option to change that. For example to scan the <code>docs</code> directory for doctests in Markdown files:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--extensions</span> <span class="st">"md"</span> docs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>To scan the <code>src</code> directory for doctests in headers and implementation files you could do:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--extensions</span> <span class="st">"h, hpp, cpp"</span> src</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Whitespace, commas, or semicolons should separate the list of files extensions.</p>
+<div class="admonition note">
+    <table><tbody><tr>
+    <td class="icon"> <i class="fa icon-note" title="Note"></i></td>
+    <td class="content">
+    
+Typically, doctests are in header files. If <code>Foo.h</code> or <code>Foo.hpp</code> has doctests, the corresponding test file will be called <code>doxy_Foo.cpp</code> though you can change the <code>doxy_</code> prefix as documented below. If there are doctests in a related file <code>Foo.extension</code>, those tests will be put in a test source called <code>doxy_Foo_extension.cpp</code>. So doctests in <code>Foo.md</code> generate a <code>doxy_Foo_md.cpp</code> file, doctests in <code>Foo.cpp</code> generate a <code>doxy_Foo_cpp.cpp</code> file.
+</td></tr></tbody></table></div>
 </section>
 <section id="prefix" class="level3">
 <h3 class="anchored" data-anchor-id="prefix"><code>--prefix</code></h3>
 <p>By default, a header file called <code>Foo.h</code> will generate a test file called <code>doxy_Foo.cpp</code>. You can change this with the <code>--prefix</code> option:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--prefix</span> test_ include/project/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Which will generate test files with the <code>test_</code> prefix, so <code>test_Foo.cpp</code> instead of <code>doxy_Foo.cpp</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--prefix</span> test_ include/project/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Now we will generate test files with the <code>test_</code> prefix, so <code>test_Foo.cpp</code> instead of <code>doxy_Foo.cpp</code>.</p>
 </section>
 <section id="force" class="level3">
 <h3 class="anchored" data-anchor-id="force"><code>--force</code></h3>
 <p>Doxytest has a rudimentary form of dependency tracking. By default, for the sake of efficiency, the script will not regenerate a test file if it already exists and is newer than the header file.</p>
 <p>You can force regeneration with the <code>--force</code> option:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--force</span> include/project/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--force</span> include/project/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This will regenerate the test files even if they already exist and are newer than the header files. The <a href="../../pages/cmake/index.html"><code>doxytest.cmake</code></a> module uses this flag as it relies on CMake’s more sophisticated notion of dependency tracking, only to invoke the script on a header file if it is completely necessary.</p>
 </section>
 <section id="always" class="level3">
 <h3 class="anchored" data-anchor-id="always"><code>--always</code></h3>
 <p>By default, the script will not generate a test file if it doesn’t find any doctests. You can force the generation of a trivial test file with the <code>--always</code> option:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--always</span> Foo.h</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--always</span> Foo.h</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If it turns out that there are no test code blocks in the header file, the script will generate a test program that prints a message along the lines of “No test code found in <code>Foo.h</code>.” and exits.</p>
 <div class="admonition note">
     <table><tbody><tr>
@@ -561,7 +588,7 @@ This option is helpful if you are running the script on all the header files in 
 <section id="max_fails" class="level3">
 <h3 class="anchored" data-anchor-id="max_fails"><code>--max_fails</code></h3>
 <p>By default, the generated test programs will exit when they encounter more than 10 doctest failures. You can change this with the <code>--max_fails</code> option:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--max_fails</span> 3 Foo.h</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--max_fails</span> 3 Foo.h</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This will cause the generated test program to exit if it encounters more than three doctest failures.</p>
 <div class="admonition note">
     <table><tbody><tr>
@@ -574,60 +601,64 @@ If you get a lot of doctest failures, there usually is some fundamental flaw tha
 <section id="combined" class="level3">
 <h3 class="anchored" data-anchor-id="combined"><code>--combined</code></h3>
 <p>By default, the script generates a separate test file for each header file with doctest code blocks. You can instead generate a single combined test file with the <code>--combined</code> option:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--combined</span> include/project/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This will generate a single test file, <code>doxytests.cpp</code>, that contains all the test code blocks from all the header files.</p>
-<p>To set the basename of the generated file, provide a name argument also.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--combined</span> all_tests_in_one include/project/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This will generate a single test file called <code>all_tests_in_one.cpp</code> that contains all the test code blocks from all the header files.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--combined</span> include/project/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This will generate a single test file, <code>doxytests.cpp</code>, containing all test code blocks from all header files.</p>
+<p>To set the basename of the generated file, also provide a name argument.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--combined</span> all_tests_in_one include/project/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This will generate a single test file, <code>all_tests_in_one.cpp</code>, that contains all the test code blocks from all the header files.</p>
 </section>
 <section id="silent" class="level3">
 <h3 class="anchored" data-anchor-id="silent"><code>--silent</code></h3>
-<p>By default, the script prints progress messages to the console while running. You can suppress these with the <code>--silent</code> option:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--silent</span> include/project/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>By default, the script prints progress messages to the console as it runs. You can suppress these with the <code>--silent</code> option:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--silent</span> include/project/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This will suppress all progress messages but still show error messages, which can be handy in various automated scenarios.</p>
 </section>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <p>Running <code>doxytest.py --help</code> will show the current help message:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>usage: doxytest.py [-h] [-d OUTPUT_DIR] [-i INCLUDE] [-f] [-s] [-a] [-p PREFIX] [-m MAX_FAILS] [-c [COMBINED]] [input_paths ...]</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>Extracts test code from fenced code blocks in header comments and generates standalone C++ test programs.</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>positional arguments:</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a> input_paths           Header files or directories to scan for embedded test code.</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>Options:</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a> -h, --help            show this help message and exit</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a> -d, --dir OUTPUT_DIR  Output directory for generated .cpp files (default: current directory).</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a> -i, --include INCLUDE</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a> Additional headers to include in generated files (repeatable).</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a> -f, --force           Force regeneration even if outputs are newer than inputs.</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a> -s, --silent          Suppress progress messages (errors are still shown).</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a> -a, --always          Always generate a trivial test file for headers without doctests.</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a> -p, --prefix PREFIX   Filename prefix for generated test files (default: doxy_).</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a> -m, --max_fails MAX_FAILS</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a> Maximum number of allowed test failures before aborting (default: 10).</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a> -c, --combined [COMBINED]</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a> Generate a combined test file (optional name, default doxytests.cpp).</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>Examples:</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a> doxytest.py include/project/foo.h</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a> doxytest.py include/project/</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a> doxytest.py include/project/foo.h --dir tests</span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a> doxytest.py include/project/ -d /tmp/output</span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a> doxytest.py include/project/foo.h -i "&lt;other_project/Bar.h&gt;" -i "&lt;iostream&gt;"</span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a> doxytest.py include/project/foo.h --include "&lt;other_project/Bar.h&gt;" --include "&lt;map&gt;"</span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a> doxytest.py include/project/foo.h --force</span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a> doxytest.py include/project/ --silent</span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a> doxytest.py include/project/ --always</span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a> doxytest.py include/project/ --combined</span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a> doxytest.py include/project/ --prefix test_</span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a> doxytest.py include/project/foo.h --max_fails 3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode txt code-with-copy"><code class="sourceCode default"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>usage: doxytest.py [-h] [-e EXTENSIONS] [-d OUTPUT_DIR] [-i INCLUDE] [-f] [-s] [-a] [-p PREFIX] [-m MAX_FAILS] [-c [COMBINED]] [input_paths ...]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>Extracts test code from fenced code blocks in documentation and generates standalone C++ test programs.</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>positional arguments:</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  input_paths           Files or directories to scan for embedded test code.</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>options:</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  -h, --help            show this help message and exit</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  -e, --extensions EXTENSIONS</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                        List of file extensions to scan for tests (default: .h, .hpp). Separate values with commas, whitespace, or semicolons.</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  -d, --dir OUTPUT_DIR  Output directory for generated .cpp files (default: current directory).</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  -i, --include INCLUDE</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>                        Additional header include to add to generated files (repeatable).</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  -f, --force           Force regeneration even if outputs are newer than inputs.</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  -s, --silent          Suppress progress messages (errors are still shown).</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  -a, --always          Always generate a trivial test file even if no test blocks are found.</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  -p, --prefix PREFIX   Filename prefix for generated test files (default: doxy_).</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  -m, --max_fails MAX_FAILS</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>                        Maximum number of allowed test failures before aborting (default: 10).</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  -c, --combined [COMBINED]</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>                        Generate a combined test file (optional name, default doxytests.cpp).</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>Examples:</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  doxytest.py include/project/foo.h</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  doxytest.py include/project/</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>  doxytest.py include/project/ --extensions "h, cpp, md"</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>  doxytest.py include/project/foo.h --dir tests</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>  doxytest.py include/project/ -d /tmp/output</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>  doxytest.py include/project/foo.h -i "&lt;other_project/Bar.h&gt;" -i "&lt;iostream&gt;"</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>  doxytest.py include/project/foo.h --include "&lt;other_project/Bar.h&gt;" --include "&lt;map&gt;"</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>  doxytest.py include/project/foo.h --force</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>  doxytest.py include/project/ --silent</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>  doxytest.py include/project/ --always</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>  doxytest.py include/project/ --combined</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>  doxytest.py include/project/ --prefix test_</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>  doxytest.py include/project/foo.h --max_fails 3</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a> doxytest.py include/project/foo.h --max_fails 3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="next-steps" class="level2">
 <h2 class="anchored" data-anchor-id="next-steps">Next Steps</h2>
-<p>Get more information about the two provided <a href="../../pages/script/assertions.html"><code>assertion</code></a> macros and perhaps examine some more <a href="../../pages/script/advanced.html">advanced</a> custom use scenarios.</p>
+<p>Get more information about the two provided <a href="../../pages/script/assertions.html"><code>assertion</code></a> macros and examine some more <a href="../../pages/script/advanced.html">advanced</a> custom use scenarios.</p>
 <p>If you use CMake, be sure also to check out <a href="../../pages/cmake/index.html"><code>doxytest.cmake</code></a>.</p>
 
 

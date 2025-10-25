@@ -109,6 +109,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-62CQE8TY0X"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-62CQE8TY0X', { 'anonymize_ip': true});
+</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
@@ -488,7 +497,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p><code>doxytest.cmake</code> is a CMake module that automates the process of extracting tests from comments in header files and adding build targets for the resulting test programs. It defines a single CMake function called <code>doxytest</code> which is a wrapper around the <a href="../../pages/script/index.html"><code>doxytest.py</code></a> script.</p>
+<p><code>doxytest.cmake</code> is a CMake module that automates the process of extracting tests from documentation and adding build targets for the resulting test programs. It defines a single CMake function called <code>doxytest</code> which is a wrapper around the <a href="../../pages/script/index.html"><code>doxytest.py</code></a> script.</p>
 </section>
 <section id="usage" class="level2">
 <h2 class="anchored" data-anchor-id="usage">Usage</h2>
@@ -510,7 +519,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>doxytests/doxy_foo.cpp</code></li>
 <li><code>doxytests/doxy_bar.cpp</code></li>
 </ul>
-<p>Note that the default output directory for the test source files is <code>doxytests/</code>. That script creates the directory if necessary. Also note that, by default, each test source file has a name that has a prefix (by default, <code>doxy_</code>) followed by the base name of the corresponding header file.</p>
+<p>Note that the default output directory for the test source files is <code>doxytests/</code>. The script creates the directory if necessary. Also note that, by default, each test source file has a name that has a prefix (by default, <code>doxy_</code>) followed by the base name of the source file for the doctests.</p>
 <p>The <code>doxy_foo.cpp</code> source file will have an include directive for the <code>foo.h</code> header file, and the <code>doxy_bar.cpp</code> source file will have an include directive for the <code>bar.h</code> header file. The path to the header files is relative to the location of the test source file, so something like:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-2"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><a class="code-annotation-anchor" data-target-cell="annotated-cell-2" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-2-1" class="code-annotation-target"><a href="#annotated-cell-2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">"../include/project/foo.h"</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <dl class="code-annotation-container-grid">
@@ -570,7 +579,7 @@ Generally, you will want to include other header files in the test source files.
 <h3 class="anchored" data-anchor-id="doxy_dir-dir"><code>DOXY_DIR &lt;dir&gt;</code></h3>
 <p>The directory where our script will write the test source files, which by default is <code>doxytests/</code></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode cmake code-with-copy"><code class="sourceCode cmake"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">doxytest</span>(include/foo.h DOXY_DIR tests/)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This will generate test files in a top-level subdirectory called <code>tests/</code>. This directory is relative to the <code>CMAKE_SOURCE_DIR</code>.</p>
+<p>This will generate test files in the top-level <code>tests/</code> subdirectory. This directory is relative to the <code>CMAKE_SOURCE_DIR</code>.</p>
 <p>If necessary, the script creates the directory; otherwise, the module will error out if the operation fails or if the directory is not writeable.</p>
 </section>
 <section id="doxy_prefix-prefix" class="level3">
@@ -594,14 +603,14 @@ All included headers should have header guards or a <code>#pragma once</code> di
 </section>
 <section id="libraries-libs" class="level3">
 <h3 class="anchored" data-anchor-id="libraries-libs"><code>LIBRARIES &lt;libs&gt;</code></h3>
-<p>This is another commonly used option. It allows you to specify a list of libraries to link to the test executables. For example, if you are testing a library called <code>my_lib</code>, you may want to link to the <code>my_lib</code> library in the test executables. The <code>LIBRARIES</code> option achieves this:</p>
+<p>Another commonly used option. It allows you to specify a list of libraries to link to the test executables. For example, if you are testing a library called <code>my_lib</code>, you may want to link to the <code>my_lib</code> library in the test executables. The <code>LIBRARIES</code> option achieves this:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode cmake code-with-copy"><code class="sourceCode cmake"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">doxytest</span>(include/foo.h LIBRARIES my_lib)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This will link to the <code>my_lib</code> library in the test executables for the <code>foo.h</code> header file.</p>
 <p>The <code>LIBRARIES</code> option can be given a list of multiple libraries to link to.</p>
 </section>
 <section id="doxy_mode-mode" class="level3">
 <h3 class="anchored" data-anchor-id="doxy_mode-mode"><code>DOXY_MODE &lt;mode&gt;</code></h3>
-<p>This option controls the type of output from the script. By default, the <code>doxytest</code> function generates <em>both</em> individual test files and a combined test file. You can change this by passing the <code>DOXY_MODE</code> option to the <code>doxytest</code> function:</p>
+<p>This option controls the script’s output type. By default, the <code>doxytest</code> function generates <em>both</em> individual test files and a combined test file. You can change this by passing the <code>DOXY_MODE</code> option to the <code>doxytest</code> function:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode cmake code-with-copy"><code class="sourceCode cmake"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">doxytest</span>(include/foo.h DOXY_MODE PER_HEADER)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This will generate individual test files only. The other valid options are <code>COMBINED</code> and <code>BOTH</code>, where <code>BOTH</code> is the default.</p>
 </section>
@@ -646,7 +655,7 @@ All included headers should have header guards or a <code>#pragma once</code> di
 <figcaption>Editing the project in VSCode</figcaption>
 </figure>
 </div>
-<p>The <code>CMakeLists.txt</code> file in the root of the project uses the <code>doxytest.cmake</code> module to extract the doctests from the headers in the <code>include/calc/</code> directory and package them as test source code it puts in the <code>doxytests/</code> directory. Targets to build and run those tests are then made available. That includes a target for a combined test program <code>doxytests</code>.</p>
+<p>The <code>CMakeLists.txt</code> file at the root of the project uses the <code>doxytest.cmake</code> module to extract the doctests from the headers in the <code>include/calc/</code> directory and package them as test source code, placing them in the <code>doxytests/</code> directory. Targets to build and run those tests are then made available. That includes a target for a combined test program <code>doxytests</code>.</p>
 <p>The <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools"><code>CMake Tools</code></a> extension for VSCode add several buttons to bottom of the editor window to build, run, and debug the project.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">

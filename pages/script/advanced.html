@@ -108,6 +108,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-62CQE8TY0X"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-62CQE8TY0X', { 'anonymize_ip': true});
+</script>
 
 
 <meta property="og:title" content="Advanced Usage – Doxytest">
@@ -483,7 +492,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">/// ```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The <code>doxytest.py</code> script will happily extract this code block as a doctest and embed it in the test program. If this test fails, the program will print that little message and exit with a non-zero status.</p>
 <p>However, as written, the test is not integrated into the `doxytest “system. It is just a small snippet of code embedded in the test program.</p>
-<p>To integrate with Doxytest, but still use your own comparison logic, throw a <code>doxy::error</code> exception when a test fails. You construct a <code>doxy::error</code> with a custom message and then throw it to be caught by the framework.</p>
+<p>To integrate with Doxytest, but still use your own comparison logic, throw a <code>doxy::error</code> exception when a test fails. You construct a <code>doxy::error</code> with a custom message, then throw it so the framework can catch it.</p>
 <p>For example:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">/// </span><span class="an">@brief</span><span class="co"> This function adds two numbers together.</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">///</span></span>
@@ -497,8 +506,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="test-setup" class="level2">
 <h2 class="anchored" data-anchor-id="test-setup">Test Setup</h2>
-<p>Sometimes you need to have some setup code before you can run a doctest.</p>
-<p>For instance, if you have tests that require a database connection, you need to connect to the database before you can run any tests. Rather than setting up that connection for each doctest, you can use a specially marked setup code block to do it just once. To do this, mark a fenced code block with the <code>doxytest</code> kind:</p>
+<p>Sometimes you need setup code before you can run a doctest.</p>
+<p>For instance, if you have tests that require a database connection, you need to connect to the database before you can run any tests. Rather than setting up that connection for each doctest, you can use a specially marked setup code block to do it just once. To do this, mark a fenced code block with the <code>doxytest</code> or <code>doxy</code> kind:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-3"><pre class="sourceCode cpp code-annotation-code code-with-copy code-annotated"><code class="sourceCode cpp"><span id="annotated-cell-3-1"><a href="#annotated-cell-3-1" aria-hidden="true" tabindex="-1"></a><span class="co">/// </span><span class="an">@brief</span><span class="co"> The doctests in this file require a database connection, which we establish here.</span></span>
 <span id="annotated-cell-3-2"><a href="#annotated-cell-3-2" aria-hidden="true" tabindex="-1"></a><span class="co">///</span></span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-3-3" class="code-annotation-target"><a href="#annotated-cell-3-3" aria-hidden="true" tabindex="-1"></a><span class="co">/// ```doxytest</span></span>
@@ -520,7 +529,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="next-steps" class="level2">
 <h2 class="anchored" data-anchor-id="next-steps">Next Steps</h2>
 <p>See the full <a href="../../pages/script/reference.html">reference</a> for all the options understood by <code>doxytest.py</code>.</p>
-<p>Get more information about the two provided <a href="../../pages/script/assertions.html"><code>assertion</code></a> macros.</p>
+<p>Get more information about the two <a href="../../pages/script/assertions.html"><code>assertion</code></a> macros provided.</p>
 <p>If you use CMake, be sure also to check out <a href="../../pages/cmake/index.html"><code>doxytest.cmake</code></a>.</p>
 
 
