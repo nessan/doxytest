@@ -545,7 +545,7 @@ Any scanned header file that is the source of doctests is always included in the
 </section>
 <section id="extensions" class="level3">
 <h3 class="anchored" data-anchor-id="extensions"><code>--extensions</code></h3>
-<p>By default, if you point <code>doxyscript.py</code> at a directory it will only scan header files for embedded doctests. It identifies those files by looking for <code>.h</code> and <code>.hpp</code> extensions.</p>
+<p>By default, if you point <code>doxytest.py</code> at a directory it will only scan header files for embedded doctests. It identifies those files by looking for <code>.h</code> and <code>.hpp</code> extensions.</p>
 <p>You can use the <code>-e/--extensions</code> option to change that. For example to scan the <code>docs</code> directory for doctests in Markdown files:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxytest.py</span> <span class="at">--extensions</span> <span class="st">"md"</span> docs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>To scan the <code>src</code> directory for doctests in headers and implementation files you could do:</p>
