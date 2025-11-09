@@ -73,7 +73,7 @@ You can compile the test program using your favourite C++ compiler, for example,
 g++ -std=c++23 -o doxy_add doxy_add.cpp
 ```
 
-**NOTE:** The `doxyscript` generated test source uses `std::println` and friends, so typically you need to invoke the compiler with an appropriate level of "modernity".
+**NOTE:** The `doxytest` generated test source uses `std::println` and friends, so typically you need to invoke the compiler with an appropriate level of "modernity".
 
 Running `./doxy_add` gives output along the lines:
 

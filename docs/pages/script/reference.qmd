@@ -73,7 +73,7 @@ If necessary, the script will create the `doxytests` directory and error out on 
 
 ### `--extensions`
 
-By default, if you point `doxyscript.py` at a directory it will only scan header files for embedded doctests.
+By default, if you point `doxytest.py` at a directory it will only scan header files for embedded doctests.
 It identifies those files by looking for `.h` and `.hpp` extensions.
 
 You can use the `-e/--extensions` option to change that.
